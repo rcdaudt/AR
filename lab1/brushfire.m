@@ -1,5 +1,6 @@
 function [value_map] = brushfire(map)
 % Brushfire algorithm for repulsive potential
+% Rodrigo Daudt
 
     % Initialise value_map
     value_map = map;

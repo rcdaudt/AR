@@ -1,9 +1,10 @@
 function [value_map, trajectory] = wavefront(map, start, goal)
 % Wavefront path planning
+% Rodrigo Daudt
     
     % Initialise value_map
     value_map = map;
-    value_map(start(1),start(2)) = 2;
+    value_map(goal(1),goal(2)) = 2;
     
     % Find map size
     s = size(map);
@@ -13,7 +14,7 @@ function [value_map, trajectory] = wavefront(map, start, goal)
     
     
     cl = 3; % Current label
-    queue = [start(1) start(2)]; % Current level queue
+    queue = [goal(1) goal(2)]; % Current level queue
     next_queue = []; % Next level queue
     
     while size(queue,1) > 0
@@ -34,18 +35,19 @@ function [value_map, trajectory] = wavefront(map, start, goal)
         next_queue = [];
     end
     
-    % Find trajectory backwards from goal
-    cp = goal; % current point
-    trajectory = [goal(1) goal(2)];
+    % Find trajectory
+    cp = start; % current point
+    trajectory = [start(1) start(2)];
     
     while value_map(cp(1),cp(2)) ~= 2
         for i = 1:size(N,1)
+            % Neighbour coordinates
             v = cp(1) + N(i,1);
             h = cp(2) + N(i,2);
             if v>=1 && v<= s(1) && h>=1 && h<=s(2)
                 if value_map(v,h) == (value_map(cp(1),cp(2))-1)
                     cp = [v h];
-                    trajectory = [cp;trajectory];
+                    trajectory = [trajectory;cp];
                     break;
                 end
             end
