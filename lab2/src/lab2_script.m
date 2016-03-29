@@ -42,9 +42,31 @@ vertices2 = [0.6053  7.9971  0;
             10.3129 7.9094  5.0000;
             10.3713 1.5351  6.0000];
         
+vertices3 = [0.7807 9.0497  0;
+            3.0322  8.9912  1.0000;
+            1.3655  6.7105  1.0000;
+            4.1140  4.0497  1.0000;
+            6.2778  8.2310  1.0000;
+            8.2953  5.8333  2.0000;
+            5.6345  2.6170  2.0000;
+            9.1433  1.9152  2.0000;
+            7       3       2.0000;
+            10.2544 0.5702  3.0000];
+        
+vertices4 = [0.1406	0.8843	0;
+            0.3151  0.8183  1;
+            0.1885  0.4039  1;
+            0.5511  0.7418  1;
+            0.2873  0.6360  1;
+            0.3410  0.7189  2;
+            0.7599  0.9815  2;
+            0.6267  0.4587  2;
+            0.5882  0.8374  2;
+            0.6993	0.3798	3];
+        
 %% Plot environment
 
-vertices = vertices1;
+vertices = vertices4;
 
 figure;
 hold on;
@@ -54,21 +76,29 @@ for i = 0:N
     poly_ind = find(vertices(:,3)==i); % Find indices of polygon
     poly_coords = vertices(poly_ind,[1 2]); % Extract point coordinates
     poly_coords = [poly_coords;poly_coords(1,:)]; % Repeat initial point to close polygon
-    plot(poly_coords(:,1),poly_coords(:,2),'b');
+    plot(poly_coords(:,1),poly_coords(:,2),'b','LineWidth',2);
 end
+for i = 2:size(vertices,1)-1
+    text(vertices(i,1),vertices(i,2),num2str(i));
+end
+scatter(vertices(1,1),vertices(1,2),'r+','LineWidth',3);
+text(vertices(1,1),vertices(1,2),'Start');
+scatter(vertices(end,1),vertices(end,2),'g+','LineWidth',3);
+text(vertices(end,1),vertices(end,2),'Goal');
 axis('equal');
 
-%% 
+%% RPS
 
-
-
-
-
-
-
-
-
-
+visibility_graph = RPS(vertices);
+for i = 1:size(visibility_graph,1)
+    x1 = vertices(visibility_graph(i,1),1);
+    x2 = vertices(visibility_graph(i,2),1);
+    y1 = vertices(visibility_graph(i,1),2);
+    y2 = vertices(visibility_graph(i,2),2);
+    if vertices(visibility_graph(i,1),3) ~= vertices(visibility_graph(i,2),3)
+        plot([x1 x2],[y1 y2],'r');
+    end
+end
 
 
 
