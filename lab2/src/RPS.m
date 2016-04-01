@@ -6,15 +6,9 @@ function edges = RPS(vertices)
 num_v = size(vertices,1);
 num_obj = max(vertices(:,3))-1;
 ang_to_v = [zeros(num_v,1) (1:num_v)'];
-% S = [];
 visibility_graph = [];
 
-% max_d = 0;
-% for i = 1:(num_v-1)
-%     for j = (i+1):num_v
-%         max_d = max(max_d,norm([(vertices(i,1)-vertices(j,1)), (vertices(i,2)-vertices(j,2))]));
-%     end
-% end
+
 
 
 % Create list of edges coordinates and list of edges connected to each
@@ -44,15 +38,6 @@ for i = 1:num_obj
     edges_connected_to_v(indices(1),2) = edge_counter;
 end
 
-% Create a list with elongated versions of each edge to avoid problems with
-% polyxpoly
-long_edge_list = edge_list;
-for i = 1:edge_counter
-    long_edge_list(i,1) = 2*edge_list(i,1) - edge_list(i,3);
-    long_edge_list(i,2) = 2*edge_list(i,2) - edge_list(i,4);
-    long_edge_list(i,3) = 2*edge_list(i,3) - edge_list(i,1);
-    long_edge_list(i,4) = 2*edge_list(i,4) - edge_list(i,2);
-end
 
 for v = 1:num_v % For each vertex
     % Create sorted angle to vertex list
@@ -113,13 +98,7 @@ for v = 1:num_v % For each vertex
     for i = 1:num_v
         % Get vertex index
         other_v = sorted_list(i,2);
-
-        if (v ~= other_v)
-            
-            
-            
-            
-            
+        if (v ~= other_v)   
             is_visible = true;
             % Check if visible, if visible add to visible list
             if numel(S) > 0 % If S list is not empty
@@ -162,10 +141,6 @@ for v = 1:num_v % For each vertex
                     visibility_graph = [visibility_graph;v other_v];
                 end
             end
-            
-
-            
-            
 
             % Add and remove edges from S list
             for j = 1:2
@@ -192,25 +167,21 @@ for e = 1:size(visibility_graph,1)
     % If vertices belong to same polygon
     if vertices(visibility_graph(e,1),3) == vertices(visibility_graph(e,2),3)
         % Add only if vertices are adjascent
-        if abs(visibility_graph(e,1)-visibility_graph(e,2))>1
-            polyg = vertices(visibility_graph(e,1),3);
-            indices = find(vertices(:,3) == polyg);
-            first_in_polyg = min(indices);
-            last_in_polyg = max(indices);
-            small = min(visibility_graph(e,1),visibility_graph(e,2));
-            big = max(visibility_graph(e,1),visibility_graph(e,2));
-            if(first_in_polyg == small) && (last_in_polyg == big)
-                edges = [edges; visibility_graph(e,:)];
-            end
-        else
+        px = (vertices(visibility_graph(e,1),1)+vertices(visibility_graph(e,2),1))/2;
+        py = (vertices(visibility_graph(e,1),2)+vertices(visibility_graph(e,2),2))/2;
+        polygon = vertices(visibility_graph(e,1),3);
+        poly_vertices = find(vertices(:,3) == polygon);
+        polygon_x = vertices(poly_vertices,1);
+        polygon_y = vertices(poly_vertices,2);
+        [in, on] = inpolygon(px,py,polygon_x,polygon_y);
+        if on == 1
+            edges = [edges; visibility_graph(e,:)];
+        elseif in == 0
             edges = [edges; visibility_graph(e,:)];
         end
     else
         edges = [edges; visibility_graph(e,:)];
     end
 end
-
-
-
 
 end

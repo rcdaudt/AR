@@ -66,7 +66,7 @@ vertices4 = [0.1406	0.8843	0;
         
 %% Plot environment
 
-vertices = vertices4;
+vertices = vertices3;
 
 figure;
 hold on;
@@ -95,9 +95,7 @@ for i = 1:size(visibility_graph,1)
     x2 = vertices(visibility_graph(i,2),1);
     y1 = vertices(visibility_graph(i,1),2);
     y2 = vertices(visibility_graph(i,2),2);
-    if vertices(visibility_graph(i,1),3) ~= vertices(visibility_graph(i,2),3)
-        plot([x1 x2],[y1 y2],'r');
-    end
+    plot([x1 x2],[y1 y2],'r');
 end
 
 
