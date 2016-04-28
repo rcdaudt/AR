@@ -1,3 +1,19 @@
+
+% This LaTeX was auto-generated from MATLAB code.
+% To make changes, update the MATLAB code and republish this document.
+
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{color}
+
+\sloppy
+\definecolor{lightgray}{gray}{0.5}
+\setlength{\parindent}{0pt}
+
+\begin{document}
+
+    
+\begin{verbatim}
 function [vertices,edges,path]=rrt(map,q_start,q_goal,k,delta_q,p);
 % RRT trajectory planning implementation
 % Rodrigo Daudt
@@ -16,8 +32,8 @@ last_added_vertex = 1;
 
 % Loop through RRT k times
 for i = 1:k
-    
-    
+
+
     if rand() <= p
         q_rand = q_goal;
     else
@@ -25,7 +41,7 @@ for i = 1:k
         q_rand = max(rand(1,2).*s,[1,1]); % max function used to avoid eventual 0 index
     end
 %     vertices(i+1,:) = q_rand;
-    
+
     % Find index of closest vertex to q_rand
     min_d = sum(s);
     index = 0;
@@ -36,15 +52,15 @@ for i = 1:k
             index = vertex;
         end
     end
-    
-    
+
+
     % Generate q_new at distance delta_q from closest vertex in direction
     % of q_rand and add to vertices list
     dxy = q_rand - vertices(index,:);
     q_new = vertices(index,:) + delta_q*dxy/norm(dxy);
     q_new(1) = min(max(q_new(1),1),s(1));
     q_new(2) = min(max(q_new(2),1),s(2));
-    
+
     added = false;
     if is_visible(map,vertices(index,:),q_new)
         last_added_vertex = last_added_vertex + 1;
@@ -52,7 +68,7 @@ for i = 1:k
         edges(last_added_vertex-1,:) = [last_added_vertex, index];
         added = true;
     end
-    
+
     % Check if we reached the end
     % check distance from q_new to q_goal
     % if distance < delta_q create edge between q_new and q_goal
@@ -67,7 +83,7 @@ for i = 1:k
             end
         end
     end
-    
+
 
 end
 
@@ -114,3 +130,13 @@ for i = 2:21
 end
 
 end
+\end{verbatim}
+
+        \color{lightgray} \begin{verbatim}Error using rrt (line 6)
+Not enough input arguments.
+\end{verbatim} \color{black}
+    
+
+
+\end{document}
+    

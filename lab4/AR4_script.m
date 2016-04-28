@@ -1,6 +1,6 @@
-% AR Lab 2
+% AR4 script
 % Daudt
-% 11/03/16
+% 18/04/16
 
 clear all
 close all
@@ -55,19 +55,23 @@ vertices3 = [0.7807 9.0497  0;
         
 vertices4 = [0.1	0.7	0;
             0.3  0.8  1;
-            0.2  0.4  1;
+            0.2  0.2  1;
             0.55  0.75  1;
-            0.3  0.6  1;
-            0.4  0.7  2;
+            0.35  0.5  1;
+            0.37  0.65  2;
             0.3  0.95  2;
             0.6  0.9  2;
             0.5	0.5	3];
         
-%% Plot environment
+%% Setup environment and plotting
 
-vertices = vertices2;
+% Apply RPS
+vertices = vertices4;
+edges = RPS(vertices);
 
-figure;
+% Plot scene
+close all;
+figure(1);
 hold on;
 grid on;
 N = max(vertices(:,3)); % Find range of objects (number of objects+1, start=0, goal=N)
@@ -86,16 +90,35 @@ scatter(vertices(end,1),vertices(end,2),'g+','LineWidth',3);
 text(vertices(end,1),vertices(end,2),'Goal');
 axis('equal');
 
-%% RPS
-
-visibility_graph = RPS(vertices);
-for i = 1:size(visibility_graph,1)
-    x1 = vertices(visibility_graph(i,1),1);
-    x2 = vertices(visibility_graph(i,2),1);
-    y1 = vertices(visibility_graph(i,1),2);
-    y2 = vertices(visibility_graph(i,2),2);
+% Plot visible connexions
+for i = 1:size(edges,1)
+    x1 = vertices(edges(i,1),1);
+    x2 = vertices(edges(i,2),1);
+    y1 = vertices(edges(i,1),2);
+    y2 = vertices(edges(i,2),2);
     plot([x1 x2],[y1 y2],'r');
 end
+
+%% Apply A*
+
+[path,minCost] = Astar(vertices,edges);
+
+for i = 1:(numel(path)-1)
+    x1 = vertices(path(i),1);
+    y1 = vertices(path(i),2);
+    x2 = vertices(path(i+1),1);
+    y2 = vertices(path(i+1),2);
+    plot([x1 x2],[y1 y2],'g','linewidth',2);
+end
+
+
+
+
+
+
+
+
+
 
 
 
